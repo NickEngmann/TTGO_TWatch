@@ -1,0 +1,27 @@
+name: Build
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Setup PlatformIO
+      uses: platformio/platformio-actions@v5
+      with:
+        platformio-versions: "6.0.0"
+    
+    - name: Install dependencies
+      run: pio pkg install
+      working-directory: build
+    
+    - name: Build
+      run: pio run
+      working-directory: build
