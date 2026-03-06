@@ -1,0 +1,32 @@
+name: Build TTGO TWatch Library
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Setup PlatformIO
+      uses: platformio/platformio-actions@v5
+      with:
+        platformio-version: latest
+        
+    - name: Install dependencies
+      run: |
+        cd /workspace/repo
+        pio pkg install
+        
+    - name: Build
+      run: |
+        cd /workspace/repo
+        pio run
+      env:
+        PLATFORMIO_CI_SRC: build/src/main.cpp
+        PLATFORMIO_BUILD_FLAGS: -DLILYGO_WATCH_2020_V3 -DDISABLE_DIAGNOSTIC_OUTPUT
