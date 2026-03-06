@@ -1,0 +1,45 @@
+name: Build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Cache pip packages
+      uses: actions/cache@v3
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+          
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+        
+    - name: Install PlatformIO Core
+      run: |
+        pip install --upgrade pip
+        pip install platformio
+        
+    - name: Install dependencies
+      run: |
+        cd /workspace/repo
+        pio pkg install
+        
+    - name: Build
+      run: |
+        cd /workspace/repo
+        pio run
+      env:
+        PLATFORMIO_CI_SRC: build/src
+        PLATFORMIO_BUILD_DIR: build
