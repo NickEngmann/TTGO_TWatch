@@ -1,8 +1,138 @@
 #ifndef __BL_H
 #define __BL_H
+
 #include <Arduino.h>
 #include <Ticker.h>
 
+#ifdef NATIVE_BUILD
+
+/* Native build stubs for PWMBase and derived classes */
+
+typedef struct {
+    uint8_t _pin;
+    uint8_t _channel;
+} PWMBase;
+
+typedef struct {
+    PWMBase base;
+    bool _on;
+    uint8_t _level;
+} BackLight;
+
+typedef struct {
+    PWMBase base;
+    double _freq;
+    void *_tick;
+} PWMToneBase;
+
+typedef struct {
+    PWMToneBase base;
+} Motor;
+
+typedef struct {
+    PWMToneBase base;
+} Buzzer;
+
+static inline PWMBase* PWMBase_new(uint8_t pin, uint8_t channel) {
+    (void)pin;
+    (void)channel;
+    return (PWMBase*)0x12345678;
+}
+
+static inline void PWMBase_delete(PWMBase* pwm) {
+    (void)pwm;
+}
+
+static inline void PWMBase_begin(PWMBase* pwm) {
+    (void)pwm;
+}
+
+static inline void PWMBase_adjust(PWMBase* pwm, uint8_t level) {
+    (void)pwm;
+    (void)level;
+}
+
+static inline BackLight* BackLight_new(uint8_t pin, uint8_t channel) {
+    (void)pin;
+    (void)channel;
+    return (BackLight*)0x12345678;
+}
+
+static inline void BackLight_delete(BackLight* bl) {
+    (void)bl;
+}
+
+static inline uint8_t BackLight_getLevel(BackLight* bl) {
+    (void)bl;
+    return 0;
+}
+
+static inline void BackLight_adjust(BackLight* bl, uint8_t level) {
+    (void)bl;
+    (void)level;
+}
+
+static inline bool BackLight_isOn(BackLight* bl) {
+    (void)bl;
+    return false;
+}
+
+static inline void BackLight_on(BackLight* bl) {
+    (void)bl;
+}
+
+static inline void BackLight_off(BackLight* bl) {
+    (void)bl;
+}
+
+static inline bool BackLight_reverse(BackLight* bl) {
+    (void)bl;
+    return false;
+}
+
+static inline PWMToneBase* PWMToneBase_new(uint8_t pin, uint8_t channel, int freq) {
+    (void)pin;
+    (void)channel;
+    (void)freq;
+    return (PWMToneBase*)0x12345678;
+}
+
+static inline void PWMToneBase_delete(PWMToneBase* pwm) {
+    (void)pwm;
+}
+
+static inline void PWMToneBase_begin(PWMToneBase* pwm) {
+    (void)pwm;
+}
+
+static inline void PWMToneBase_onec(PWMToneBase* pwm, int duration) {
+    (void)pwm;
+    (void)duration;
+}
+
+static inline Motor* Motor_new(uint8_t pin, uint8_t channel, int freq) {
+    (void)pin;
+    (void)channel;
+    (void)freq;
+    return (Motor*)0x12345678;
+}
+
+static inline void Motor_delete(Motor* motor) {
+    (void)motor;
+}
+
+static inline Buzzer* Buzzer_new(uint8_t pin, uint8_t channel, int freq) {
+    (void)pin;
+    (void)channel;
+    (void)freq;
+    return (Buzzer*)0x12345678;
+}
+
+static inline void Buzzer_delete(Buzzer* buzzer) {
+    (void)buzzer;
+}
+
+#else
 
 class PWMBase
 {
@@ -133,5 +263,7 @@ public:
     {
     };
 };
+
+#endif /* NATIVE_BUILD */
 
 #endif

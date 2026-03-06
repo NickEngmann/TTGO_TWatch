@@ -3,3 +3,16 @@
 build
 make
 .gitignore
+# Auto-added by Marisol pipeline
+node_modules/
+__pycache__/
+*.pyc
+.pytest_cache/
+*.o
+*.so
+.env
+debug_*.py
+.cache/
+dist/
+*.egg-info/
+.pio/

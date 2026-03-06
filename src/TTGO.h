@@ -13,7 +13,11 @@ Written by Lewis he //https://github.com/lewisxhe
 
 #pragma once
 
+#ifdef NATIVE_BUILD
+#include "native_stub.h"
+#else
 #include <SPI.h>
+#endif
 
 #if defined(LILYGO_WATCH_HAS_S76_S78G)
 #define LILYGO_WATCH_HAS_SDCARD
