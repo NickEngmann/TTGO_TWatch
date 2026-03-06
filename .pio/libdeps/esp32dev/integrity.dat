@@ -1,0 +1,10 @@
+adafruit/Adafruit Unified Sensor
+Wire
+SPI
+lewisxhe/AXP202X_Library
+lvgl/lvgl@^7.7.2
+bodmer/TFT_eSPI
+adafruit/Adafruit BusIO
+adafruit/Adafruit SSD1306
+lewisxhe/SensorLib
+adafruit/Adafruit GFX Library
