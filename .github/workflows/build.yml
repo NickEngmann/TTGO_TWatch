@@ -1,0 +1,36 @@
+name: Build
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./build
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Setup PlatformIO
+      uses: platformio/platformio-actions@latest
+      with:
+        platform: espressif32
+        board: esp32dev
+        framework: arduino
+
+    - name: Install Dependencies
+      run: pio pkg install
+
+    - name: Build
+      run: pio run
+
+    - name: Upload Firmware
+      uses: actions/upload-artifact@v3
+      with:
+        name: firmware
+        path: build/.pio/build/esp32dev/firmware.bin
