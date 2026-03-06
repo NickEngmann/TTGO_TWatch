@@ -1,0 +1,35 @@
+name: Build
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Cache pip packages
+      uses: actions/cache@v3
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+          
+    - name: Setup PlatformIO
+      uses: platformio/platformio-actions@latest
+      with:
+        platformio-version: latest
+        
+    - name: Install dependencies
+      run: pio pkg install
+      working-directory: ${{ github.workspace }}
+      
+    - name: Build
+      run: pio run
+      working-directory: ${{ github.workspace }}
