@@ -17,6 +17,32 @@ TTGOClass *TTGOClass::_ttgo = nullptr;
 
 EventGroupHandle_t TTGOClass::_tpEvent = nullptr;
 
+#ifdef NATIVE_BUILD
+// Native build - include testable state machine logic
+#include "StateMachine.cpp"
+#endif
 
+// State machine integration methods
+void TTGOClass::runStateMachine() {
+    if (stateMachine) {
+        stateMachine->run();
+    }
+}
 
+void TTGOClass::handleButtonPress() {
+    if (stateMachine && button) {
+        stateMachine->handleButtonPress();
+    }
+}
 
+void TTGOClass::updateDisplay() {
+    if (stateMachine) {
+        stateMachine->updateDisplay();
+    }
+}
+
+void TTGOClass::updatePowerManagement() {
+    if (stateMachine) {
+        stateMachine->updatePowerManagement();
+    }
+}

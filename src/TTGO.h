@@ -13,14 +13,18 @@ Written by Lewis he //https://github.com/lewisxhe
 
 #pragma once
 
+#ifdef ESP32
 #include <SPI.h>
+#endif
 
 #if defined(LILYGO_WATCH_HAS_S76_S78G)
 #define LILYGO_WATCH_HAS_SDCARD
 #endif
 
 #ifdef LILYGO_WATCH_LVGL
+#ifdef ESP32
 #include <Ticker.h>
+#endif
 #endif
 
 #ifdef LILYGO_WATCH_HAS_SDCARD
@@ -98,11 +102,14 @@ typedef FocalTech_Class CapacitiveTouch ;
 #endif
 
 #ifdef LILYGO_WATCH_HAS_ADC
+#ifdef ESP32
 #include "esp_adc_cal.h"
+#endif
 #endif  /*LILYGO_WATCH_HAS_ADC*/
 
 #include "drive/i2c/i2c_bus.h"
 #include "drive/tft/bl.h"
+#include "StateMachine.h"
 
 #ifdef LILYGO_EINK_GDEW0371W7
 #define GDEW0371W7_WIDTH    416
@@ -246,6 +253,37 @@ public:
 
         if (!(disable & NO_HARDWARE))
             initBlacklight();
+
+        stateMachine = new StateMachine();
+    }
+
+    void beginStateMachine() {
+        stateMachine->begin();
+    }
+
+    // State machine integration
+    void runStateMachine() {
+        if (stateMachine) {
+            stateMachine->run();
+        }
+    }
+
+    void handleButtonPress() {
+        if (stateMachine && button) {
+            stateMachine->handleButtonPress();
+        }
+    }
+
+    void updateDisplay() {
+        if (stateMachine) {
+            stateMachine->updateDisplay();
+        }
+    }
+
+    void updatePowerManagement() {
+        if (stateMachine) {
+            stateMachine->updatePowerManagement();
+        }
     }
 
 #ifdef LILYGO_WATCH_HAS_BMA423
@@ -1551,6 +1589,7 @@ private:
     I2CBus *i2c = nullptr;
     static TTGOClass *_ttgo;
     static EventGroupHandle_t _tpEvent;
+    StateMachine *stateMachine = nullptr;
 
 #if  defined(LILYGO_WATCH_LVGL)
     Ticker *tickTicker = nullptr;
