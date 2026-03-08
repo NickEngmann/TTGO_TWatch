@@ -185,23 +185,5 @@ void test_multiple_updates_accumulate_steps(void) {
     TEST_ASSERT_MESSAGE(countAfterSecond > countAfterFirst, "countAfterSecond should be > countAfterFirst");
 }
 
-int main(void) {
-    UNITY_BEGIN();
-    
-    RUN_TEST(test_init_returns_true);
-    RUN_TEST(test_init_sets_initialized_flag);
-    RUN_TEST(test_get_step_count_initially_zero);
-    RUN_TEST(test_update_increments_steps);
-    RUN_TEST(test_set_daily_goal);
-    RUN_TEST(test_goal_reached_when_steps_exceed_goal);
-    RUN_TEST(test_goal_not_reached_when_steps_below_goal);
-    RUN_TEST(test_reset_daily_count);
-    RUN_TEST(test_reset_all_counters);
-    RUN_TEST(test_config_default_values);
-    RUN_TEST(test_set_config_updates_values);
-    RUN_TEST(test_progress_ring_widget_set);
-    RUN_TEST(test_update_does_not_crash_with_no_init);
-    RUN_TEST(test_multiple_updates_accumulate_steps);
-    
-    return UNITY_END();
-}
+// Note: This test file is included by test_statemachine.cpp
+// Do not include main() here - it's defined in test_statemachine.cpp
