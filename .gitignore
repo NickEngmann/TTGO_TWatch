@@ -2,21 +2,13 @@
 .DS_Store
 build
 make
-.gitignore
-# Auto-added by Marisol pipeline
+.pio/
 .env
 .cache/
-MARISOL.md
 __pycache__/
 *.pyc
 .pytest_cache/
-debug_*.py
-dist/
-*.egg-info/
 *.o
 *.so
 node_modules/
-.pio/
-.gradle/
-*.class
-local.properties
+screenshots/*.ppm
