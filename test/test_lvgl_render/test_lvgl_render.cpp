@@ -126,7 +126,14 @@ void tearDown(void) {}
 
 void test_lvgl_init(void) {
     lvgl_ensure_init();
-    new_screen();
+    lv_obj_t *scr = new_screen();
+
+    /* Verify init by rendering a centered status label */
+    lv_obj_t *lbl = lv_label_create(scr, NULL);
+    lv_label_set_text(lbl, "LVGL Ready");
+    lv_obj_set_style_local_text_color(lbl, LV_LABEL_PART_MAIN, LV_STATE_DEFAULT, COLOR_TEAL);
+    lv_obj_align(lbl, NULL, LV_ALIGN_CENTER, 0, 0);
+
     lvgl_render();
     TEST_ASSERT_NOT_NULL(display);
     save_screenshot("init");
