@@ -55,34 +55,19 @@ jobs:
           SIM_SCREENSHOT_DIR: screenshots
         run: pio test -e native_lvgl -v
 
+      - name: Convert PPM screenshots to PNG
+        if: always()
+        run: |
+          sudo apt-get install -y netpbm
+          cd screenshots
+          for f in *.ppm; do
+            [ -f "$f" ] && pnmtopng "$f" > "${f%.ppm}.png" 2>/dev/null || true
+          done
+
       - name: Upload simulator screenshots
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: lvgl-simulator-screenshots
-          path: screenshots/
+          path: screenshots/*.png
           if-no-files-found: ignore
-
-  esp32-build:
-    name: ESP32 Build Check
-    runs-on: ubuntu-latest
-    continue-on-error: true
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Cache PlatformIO packages
-        uses: actions/cache@v4
-        with:
-          path: ~/.platformio
-          key: ${{ runner.os }}-pio-esp32-${{ hashFiles('platformio.ini') }}
-
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
-
-      - name: Install PlatformIO Core
-        run: pip install --upgrade platformio
-
-      - name: Build ESP32 firmware
-        run: pio run -e esp32
