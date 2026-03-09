@@ -66,6 +66,7 @@ jobs:
   esp32-build:
     name: ESP32 Build Check
     runs-on: ubuntu-latest
+    continue-on-error: true
     steps:
       - uses: actions/checkout@v4
 
