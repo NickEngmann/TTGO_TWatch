@@ -12,3 +12,11 @@ __pycache__/
 *.so
 node_modules/
 screenshots/*.ppm
+
+# Auto-added by Marisol pipeline
+debug_*.py
+dist/
+*.egg-info/
+.gradle/
+*.class
+local.properties
