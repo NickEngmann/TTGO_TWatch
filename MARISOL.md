@@ -14,6 +14,7 @@
 | **Audio** | PDM microphone, MAX98357 I2S amp |
 | **Storage** | SPIFFS, SD card |
 
+
 ## Build & Run
 
 ### Native Tests (no ESP32 needed)
@@ -31,6 +32,7 @@ SIM_SCREENSHOT_DIR=screenshots pio test -e native_lvgl -v
 ```bash
 pio run -e esp32
 ```
+
 
 ## Testing
 
@@ -55,12 +57,6 @@ pio run -e esp32
 ### NATIVE_BUILD Isolation
 Source files with `#include <Arduino.h>` are guarded with `#ifdef NATIVE_BUILD`. Each test includes its `.cpp` directly (`#include "../../src/Module.cpp"`). No arduino_stubs.h needed when including only isolated modules.
 
-## CI/CD
-
-GitHub Actions (`.github/workflows/ci.yml`) — 3 independent jobs:
-1. **Native Unit Tests** — `pio test -e native -v`, 97 tests (step counter, state machine, BLE audio, battery)
-2. **LVGL Simulator Tests** — `pio test -e native_lvgl -v`, 7 headless render tests, PPM→PNG conversion via netpbm, screenshots uploaded as artifacts
-3. **ESP32 Build Check** — `pio run -e esp32`, installs NimBLE dep, warns (not fails) on missing BMA423.h from T-Watch BSP
 
 ## Pipeline History
 
@@ -71,23 +67,17 @@ GitHub Actions (`.github/workflows/ci.yml`) — 3 independent jobs:
 | 2026-03-09 | Consolidation | All features merged, BLE audio fixed, 104 tests pass, CI/CD |
 | 2026-03-09 | LVGL fix | Fixed blank screenshots (single lv_init, lv_disp_load_scr, explicit styling) |
 
+- *2026-03-10* — Implement: All 48 tests pass
+
 ## Known Issues
 
 - `test_build_src = true` compiles ALL source in `src/` — LVGL tests must use separate `native_lvgl` env
 - LVGL 7.x in repo (`src/lvgl/tests/` has broken `green` member access) — excluded via `build_src_filter = -<lvgl/tests/>`
 - PlatformIO `lib_deps` (TFT_eSPI) downloaded on first build — cache `~/.platformio` in CI
 - BLE audio stream requires NimBLE (ESP32 only) — native tests use `#ifdef NATIVE_BUILD` stubs
-- ESP32 build requires BMA423.h from T-Watch BSP (not in PlatformIO registry) — CI warns, doesn't fail
+- ESP32 build requires BMA423.h from T-Watch BSP (not in PlatformIO registry) — CI warns, doesn'\''t fail
 - Each test suite MUST be in its own directory (PlatformIO compiles all files in a dir together → multiple-definition errors)
 
-## LVGL Simulator Lessons (Critical for Pipeline)
-
-- **lv_init() ONCE ONLY**: Calling lv_init() per test corrupts LVGL state → blank framebuffers. Init once, use `lvgl_test_new_screen()` per test
-- **lv_disp_load_scr() not lv_scr_load()**: `lv_scr_load()` animates (300ms), `lv_disp_load_scr()` is immediate — no extra ticks needed
-- **Explicit styling required**: LVGL 7.x default theme renders buttons/bars/arcs nearly invisible on white bg. Use teal (#009688) / gray (#B0BEC5) palette
-- **PPM over PNG**: PPM export has zero dependencies. Convert to PNG in CI via netpbm `pnmtopng`
-- **lv_obj_invalidate() + extra passes**: After widgets are created, invalidate the active screen and run 10 more lv_task_handler() calls to ensure full framebuffer flush
-- **test_filter in [env:native]**: Exclude `test_lvgl_render` from native env to prevent linker conflicts with LVGL-dependent code
 
 ## Notes
 
@@ -99,3 +89,22 @@ GitHub Actions (`.github/workflows/ci.yml`) — 3 independent jobs:
 - Battery monitoring uses AXP20X with edge-triggered alerts (fire once per threshold crossing)
 - State machine: IDLE → RECORDING → STREAMING (on BLE) with watchdog and error recovery
 - BLE state machine bug (fixed): `onConnection()` must transition to CONNECTED when in ADVERTISING state
+
+## CI/CD
+
+GitHub Actions (`.github/workflows/ci.yml`) — 3 independent jobs:
+1. **Native Unit Tests** — `pio test -e native -v`, 97 tests (step counter, state machine, BLE audio, battery)
+2. **LVGL Simulator Tests** — `pio test -e native_lvgl -v`, 7 headless render tests, PPM→PNG conversion via netpbm, screenshots uploaded as artifacts
+3. **ESP32 Build Check** — `pio run -e esp32`, installs NimBLE dep, warns (not fails) on missing BMA423.h from T-Watch BSP
+
+
+## LVGL Simulator Lessons (Critical for Pipeline)
+
+- **lv_init() ONCE ONLY**: Calling lv_init() per test corrupts LVGL state → blank framebuffers. Init once, use `lvgl_test_new_screen()` per test
+- **lv_disp_load_scr() not lv_scr_load()**: `lv_scr_load()` animates (300ms), `lv_disp_load_scr()` is immediate — no extra ticks needed
+- **Explicit styling required**: LVGL 7.x default theme renders buttons/bars/arcs nearly invisible on white bg. Use teal (#009688) / gray (#B0BEC5) palette
+- **PPM over PNG**: PPM export has zero dependencies. Convert to PNG in CI via netpbm `pnmtopng`
+- **lv_obj_invalidate() + extra passes**: After widgets are created, invalidate the active screen and run 10 more lv_task_handler() calls to ensure full framebuffer flush
+- **test_filter in [env:native]**: Exclude `test_lvgl_render` from native env to prevent linker conflicts with LVGL-dependent code
+
+
