@@ -1,5 +1,6 @@
 # TTGO T-Watch Library
 
+<<<<<<< Updated upstream
 LilyGO T-Watch library for ESP32-based smartwatch with LVGL UI, sensors, and embedded firmware.
 
 ## Overview
@@ -102,6 +103,103 @@ The project includes 104 tests across 5 test suites:
 ### Running Tests
 
 ```bash
+=======
+**Embedded C library for LilyGO T-Watch with native unit tests and LVGL headless simulation**
+
+[![PlatformIO](https://img.shields.io/badge/PlatformIO-Enabled-blue)](https://platformio.org)
+[![Unity Tests](https://img.shields.io/badge/Unity-Tested-green)](https://github.com/ThrowTheSwitch/Unity)
+[![LVGL](https://img.shields.io/badge/LVGL-v7.7.2-lightblue)](https://lvgl.io)
+[![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+
+---
+
+## 🌟 LilyGO T-Watch
+
+**English | [中文](docs/details_cn.md)**
+
+<h2 align = "left">⭐ News </h2>
+
+1. **T-Watch-S3** version is [here](https://github.com/Xinyuan-LilyGO/TTGO_TWatch_Library/tree/t-watch-s3)
+2. In order to be compatible with multiple versions of T-Watch, all examples include a `config.h` file. For the first use, you need to define the **T-Watch** model you use in the `config.h` file
+3. In the `config.h` file, you can also see similar definitions, such as **LILYGO_WATCH_LVGL**, **LILYGO_WATCH_HAS_MOTOR**, this type of definition, it will be responsible for opening the defined module function, all definitions Will be available here [View](./docs/defined_en.md)
+4. Most of the examples are only used as hardware function demonstrations. This library only completes some initialization work and some demonstrations. For more advanced gameplay, please see [TTGO.h](https://github.com/Xinyuan-LilyGO/TTGO_TWatch_Library/blob/master/src/TTGO.h), to understand how to initialize, after being familiar with it, you can completely leave this library for more advanced gameplay
+- About API, please check the source code
+- Example [description](docs/examples_en.md)
+- The latest factory firmware is made by [sharandac/My-TTGO-Watch](https://github.com/sharandac/My-TTGO-Watch)
+
+![sharandac/My-TTGO-Watch](https://github.com/sharandac/My-TTGO-Watch/blob/master/images/screen1.png)
+![sharandac/My-TTGO-Watch](https://github.com/sharandac/My-TTGO-Watch/blob/master/images/screen2.png)
+![sharandac/My-TTGO-Watch](https://github.com/sharandac/My-TTGO-Watch/blob/master/images/screen3.png)
+![sharandac/My-TTGO-Watch](https://github.com/sharandac/My-TTGO-Watch/blob/master/images/screen4.png)
+![sharandac/My-TTGO-Watch](https://github.com/sharandac/My-TTGO-Watch/blob/master/images/screen5.png)
+![sharandac/My-TTGO-Watch](https://github.com/sharandac/My-TTGO-Watch/blob/master/images/screen6.png)
+![sharandac/My-TTGO-Watch](https://github.com/sharandac/My-TTGO-Watch/blob/master/images/screen7.png)
+![sharandac/My-TTGO-Watch](https://github.com/sharandac/My-TTGO-Watch/blob/master/images/screen8.png)
+![sharandac/My-TTGO-Watch](https://github.com/sharandac/My-TTGO-Watch/blob/master/images/screen9.png)
+![sharandac/My-TTGO-Watch](https://github.com/sharandac/My-TTGO-Watch/blob/master/images/screen10.png)
+
+- Demonstration effect of T-Watch2020-V3 from lunokjod
+
+![lunokjod/watch](https://github.com/lunokjod/watch/blob/devel/doc/watchface0.png)
+![lunokjod/watch](https://github.com/lunokjod/watch/blob/devel/doc/day_watchface0.png)
+![lunokjod/watch](https://github.com/lunokjod/watch/blob/devel/doc/playground0.png)
+![lunokjod/watch](https://github.com/lunokjod/watch/blob/devel/doc/playground3.png)
+![lunokjod/watch](https://github.com/lunokjod/watch/blob/devel/doc/settime.png)
+![lunokjod/watch](https://github.com/lunokjod/watch/blob/devel/doc/battery.png)
+![lunokjod/watch](https://github.com/lunokjod/watch/blob/devel/doc/ble_upload.png)
+![lunokjod/watch](https://github.com/lunokjod/watch/blob/devel/doc/mainmenu_provisioning.png)
+![lunokjod/watch](https://github.com/lunokjod/watch/blob/devel/doc/provisioning.png)
+
+---
+
+## 🚀 Features
+
+### Hardware Support
+1. The library already contains all the hardware drivers for `T-Watch`
+2. Using **TFT_eSPI** as the display driver, you can directly call **TFT_eSPI** through the construction object.
+3. Using **lvgl v7.7.2** as the display graphics framework, the driver method has been implemented, you only need to call lvgl api according to your own needs.
+4. For the use of lvgl please refer to **[lvgl docs](https://docs.lvgl.io/master/)**
+
+### Modular Components
+- **StepCounter** — BMA423 accelerometer-based step counting with daily goals and LVGL progress rings
+- **BatteryMonitor** — AXP202 battery voltage/percentage monitoring with edge-triggered alerts
+- **StateMachine** — Recording/streaming state machine for BLE audio applications
+- **BLEAudioStream** — BLE GATT server for audio streaming with mock support for unit tests
+- **LVGL_Simulator** — Headless rendering with memory framebuffer and PPM export
+
+### Development Tools
+- **PlatformIO Native Tests** — Run unit tests on desktop without hardware
+- **Unity Test Framework** — Embedded C unit testing with 104 test cases across 5 test suites
+- **LVGL Headless Rendering** — PPM image export from LVGL widgets for automated testing
+- **Hardware Simulation** — NATIVE_BUILD support for all modular components
+
+---
+
+## 📦 Installation
+
+### Arduino IDE
+- Install the [Arduino IDE](https://www.arduino.cc/en/Main/Software). Note: Later instructions may not work if you use Arduino via Flatpak.
+- Download a zipfile from github using the "Download ZIP" button and install it using the IDE ("Sketch" -> "Include Library" -> "Add .ZIP Library...", OR:
+- Clone this git repository into your sketchbook/libraries folder. For more info, see https://www.arduino.cc/en/Guide/Libraries
+
+### PlatformIO
+```bash
+# Add to platformio.ini lib_deps
+lib_deps = bodmer/TFT_eSPI@^2.5.43
+```
+
+---
+
+## 🧪 Testing
+
+### Native Unit Tests (Desktop)
+Run PlatformIO native tests to verify modular components without hardware:
+
+```bash
+# Install PlatformIO
+pip install platformio
+
+>>>>>>> Stashed changes
 # Run all native tests
 pio test -e native -v
 
@@ -109,6 +207,7 @@ pio test -e native -v
 pio test -e native_lvgl -v
 
 # Run specific test suite
+<<<<<<< Updated upstream
 pio test -e native -v -t test_step_counter
 ```
 
@@ -269,3 +368,152 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 ## Version History
 
 See [CHANGELOG.md](CHANGELOG.md) for detailed version history and changes.
+=======
+pio test -e native -t test_step_counter
+```
+
+### Test Coverage
+| Component | Test File | Tests | Status |
+|-----------|-----------|-------|--------|
+| StepCounter | test/test_native/test_step_counter.cpp | 14 | ✅ Passing |
+| BatteryMonitor | test/test_battery/test_battery_monitor.cpp | 15 | ✅ Passing |
+| StateMachine | test/test_statemachine/test_statemachine.cpp | 21 | ✅ Passing |
+| BLEAudioStream | test/test_ble_audio/test_ble_audio_stream.cpp | 47 | ✅ Passing |
+| LVGL Renderer | test/test_lvgl_render/test_lvgl_render.cpp | 7 | ✅ Passing |
+| **Total** | | **104** | **✅ All Passing** |
+
+### Running Tests in Docker
+```bash
+docker run -v $(pwd):/workspace/repo lotus-platformio:latest \
+  pio test -e native -e native_lvgl -v
+```
+
+---
+
+## ⚠️ Notes
+
+- If you don't have the `TTGO T-Watch` option in your board manager, please update the esp32 board as follows:
+  - Using Arduino IDE Boards Manager (preferred)
+    + [Instructions for Boards Manager](docs/arduino-ide/boards_manager.md)
+  - Using Arduino IDE with the development repository
+    + [Instructions for Windows](docs/arduino-ide/windows.md)
+    + [Instructions for Mac](docs/arduino-ide/mac.md)
+    + [Instructions for Debian/Ubuntu Linux](docs/arduino-ide/debian_ubuntu.md)
+    + [Instructions for Fedora](docs/arduino-ide/fedora.md)
+    + [Instructions for openSUSE](docs/arduino-ide/opensuse.md)
+- Please note that this library currently only supports **esp core 3.0** and below. It is recommended to use **esp core 2.0.14**
+  ![](./images/arduino.jpg)
+
+---
+
+## ❓ FAQ
+
+- The following code is reported as an error when uploading. Please change the default upload baud rate in ArduinoIDE from '20000' to '921600'.
+  ```
+  A fatal error occurred: Failed to write to target RAM(result was 01070000)
+  ```
+- This error may also occur on MacOS if using a poorly compatible USB to serial driver. The driver at [wch.cn](https://www.wch.cn/downloads/CH34XSER_MAC_ZIP.html) is a better match. The webpage is in Chinese but the driver is digitally signed for security.
+
+---
+
+## 📚 How to find the sample program
+
+* T-Watch & LilyPi
+- In the Arduino board select `TTGO T-Watch`
+- In the Arduino File -> Examples -> `TTGO_TWatch_Library`
+
+---
+
+## ⚠️ Precautions
+
+- T-Watch-2019 & LilyPi: Since uses a special IO as the SD interface, please remove the SD card when downloading the program.
+
+---
+
+## 📖 Resources
+
+- [LilyPi Pin mapping and other instructions](docs/lilypi_pinmap.md)
+- [TWATCH 2019 Series pin mapping and other instructions](docs/watch_2019.md)
+- [TWATCH 2020 V1 Pin mapping and other instructions](docs/watch_2020_v1.md)
+- [TWATCH 2020 V2 Pin mapping and other instructions](docs/watch_2020_v2.md)
+- [TWATCH 2020 V3 Pin mapping and other instructions](docs/watch_2020_v3.md)
+
+---
+
+## 🔄 Version Comparison
+
+| Product | T-Watch-2019 | T-Watch-2020-V1 | T-Watch-2020-V2 | T-Watch-2020-V3 | T-Block/T-Block-V1 | LilyPi |
+|---------|--------------|-----------------|-----------------|-----------------|-------------------|--------|
+| **Core** | ESP32-D0WDQ6 | ESP32-D0WDQ6 | ESP32-D0WDQ6 | ESP32-D0WDQ6 | ESP32-D0WDQ6 | ESP32-WROVER-B |
+| **PSRAM** | 16MBytes | 16MBytes | 16MBytes | 16MBytes | 16MBytes | 16MBytes |
+| **Flash** | 8MBytes | 8MBytes | 4MBytes | 8MBytes | 8MBytes | 8MBytes |
+| **PMU** | AXP202 | AXP202 | AXP202 | AXP202 | AXP202 | ❌ |
+| **IMU** | BMA423 | BMA423 | BMA423 | BMA423 | MPU6050 | ❌ |
+| **TFT** | 1.54"/240X240/ST7789V | 1.54"/240X240/ST7789V | 1.54"/240X240/ST7789V | 1.54"/240X240/ST7789V | [1] | [1] |
+| **Touch** | FT6336 | FT6336 | FT6336 | FT6336 | [1] | [1] |
+| **RTC** | PCF8563 | PCF8563 | PCF8563 | PCF8563 | PCF8563 | PCF8563 |
+| **IR Sensor** | ❌ | ✅ | ✅ | ✅ | ❌ | ❌ |
+| **Scalable** | ✅ | ❌ | ✅ | ❌ | ✅ | ✅ |
+| **Microphone** | [1] | ❌ | ❌ | SPM1423HM4H | [1] | ❌ |
+| **GPS** | [1] | ❌ | Quectel L76K | ❌ | [1] | ❌ |
+| **Decoder** | [1] | MAX98357A | ❌ | MAX98357A | [1] | ❌ |
+| **Tactile** | [1] | IO Control | DRV2605(I2C) | IO Control | [1] | ❌ |
+| **Button** | ✅ | ✅[2] | ✅[2] | ✅[2] | ✅[2] | ✅ |
+
+- [1]: Need expansion board to support
+- [2]: The buttons are AXP202 PEK programmable buttons
+
+---
+
+## 💻 More Interesting Projects
+
+- [lunokjod/watch](https://github.com/lunokjod/watch)
+- [Micropython-twatch2020](https://y0no.fr/posts/micropython-ttgo-twatch2020/)
+- [sharandac/My-TTGO-Watch](https://github.com/sharandac/My-TTGO-Watch)
+- [lyusupov/Flight Recorder](https://github.com/lyusupov/SoftRF/wiki/Flight-Recorder)
+- [lixy123/TTGO_T_Watch_Baidu_Rec](https://github.com/lixy123/TTGO_T_Watch_Baidu_Rec)
+- [lixy123/TTGO_T_Watch_Alarm_Clock](https://github.com/lixy123/TTGO_T_Watch_Alarm_Clock)
+- [AlexGoodyear/agoodWatch](https://github.com/AlexGoodyear/agoodWatch)
+- [Adosis/TTGO_TWatch_WordClock](https://github.com/Adosis/TTGO_TWatch_WordClock)
+- [SpectralCascade/FancyWatchOS](https://github.com/SpectralCascade/FancyWatchOS)
+
+---
+
+## 🛠️ Project Structure
+
+```
+TTGO_TWatch/
+├── src/
+│   ├── StepCounter.h/cpp      # BMA423 step counting
+│   ├── BatteryMonitor.h/cpp   # AXP202 battery monitoring
+│   ├── StateMachine.h/cpp     # Recording/streaming FSM
+│   ├── ble_audio_stream.h/cpp # BLE GATT audio streaming
+│   ├── TTGO.h/cpp             # Main library wrapper
+│   ├── LilyGoWatch.h          # Watch interface
+│   ├── board/                 # Hardware-specific configs
+│   ├── libraries/             # Integrated third-party libs
+│   └── lvgl/                  # LVGL 7.7.2 embedded
+├── test/
+│   ├── test_native/           # StepCounter tests (14)
+│   ├── test_battery/          # BatteryMonitor tests (15)
+│   ├── test_statemachine/     # StateMachine tests (21)
+│   ├── test_ble_audio/        # BLEAudioStream tests (47)
+│   └── test_lvgl_render/      # LVGL renderer tests (7)
+├── examples/                  # Arduino IDE examples
+├── platformio.ini             # PlatformIO build config
+├── library.properties         # Arduino library metadata
+└── docs/                      # Documentation
+```
+
+---
+
+## 📄 License
+
+MIT License - See [LICENSE](LICENSE) file for details.
+
+---
+
+## 📝 Changelog
+
+See [CHANGELOG.md](CHANGELOG.md) for version history.
+>>>>>>> Stashed changes
