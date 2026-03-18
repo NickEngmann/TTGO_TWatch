@@ -436,7 +436,11 @@ public:
     void touchToSleep()
     {
 #if     defined(LILYGO_TOUCH_DRIVER_GTXXX)
-        //TODO:
+        // Goodix GT9xx series (GT911) - limited power mode support
+        // GT9xx_Class doesn't expose setPowerMode, use soft reset as fallback
+        touch->softReset();
+        delay(50);
+        // Note: For deep sleep, hardware reset may be required via touchWakup()
 #elif   defined(LILYGO_TOUCH_DRIVER_FTXXX)
         touch->setPowerMode(FOCALTECH_PMODE_DEEPSLEEP);
 #endif
@@ -449,7 +453,9 @@ public:
     void touchToMonitor()
     {
 #if     defined(LILYGO_TOUCH_DRIVER_GTXXX)
-        //TODO:
+        // Goodix GT9xx series - monitoring mode not directly supported
+        // GT9xx_Class lacks setPowerMode, remain in active mode
+        // Consider hardware reset for power cycle if needed
 #elif   defined(LILYGO_TOUCH_DRIVER_FTXXX)
         touch->setPowerMode(FOCALTECH_PMODE_MONITOR);
 #endif
@@ -818,8 +824,12 @@ public:
 #ifdef LILYGO_WATCH_LVGL_FS
 #if  defined(LILYGO_WATCH_LVGL_FS_SPIFFS)
         SPIFFS.begin(true, "/fs");
+#elif  defined(LILYGO_WATCH_HAS_SDCARD)
+        // SD card filesystem support
+        sdcard_begin();
 #else
-        //TODO:
+        // Default to SPIFFS if no filesystem specified
+        SPIFFS.begin(true, "/fs");
 #endif  /*LILYGO_WATCH_LVGL_FS_SPIFFS*/
 
         lv_fs_if_init();

@@ -26,12 +26,15 @@ void setup(void)
     tft->fillScreen(TFT_BLACK);
     ttgo->openBL();
 
-    //TODO:twatch 2019 touch panel occupies Wire1, it needs to be closed first,need repair !!!
+    // Initialize I2C bus for VEML6075
+    // Use Wire1 for T-Watch models with touch (which occupies Wire0)
 #ifdef LILYGO_WATCH_2019_WITH_TOUCH
-    Wire1.end();
+    Wire1.end();  // Reset Wire1 before reconfiguration
+    Wire1.begin(25, 26);  // SDA=25, SCL=26 for T-Watch 2019
+#elif defined(LILYGO_WATCH_2020_V1) || defined(LILYGO_WATCH_2020_V2) || defined(LILYGO_WATCH_2020_V3)
+    Wire1.begin(21, 22);  // SDA=21, SCL=22 for T-Watch 2020 models
 #endif
 
-    Wire1.begin(25, 26);
     if (uv.begin(Wire1) == false) {
         Serial.println("Unable to communicate with VEML6075.");
         while (1) ;

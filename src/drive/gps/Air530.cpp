@@ -134,12 +134,11 @@ void Air530::setNormalMode(void)
  * @brief   setCycleTrackingMode
  * @note    Cycle ultra-low power tracking mode, need to pull up WAKE to wake up
  * @param   runMillis: Running time (ms)
- * @param   sleepMillis: Sleep time (ms)
+ * @param   sleepMillis: Sleep time (ms) - parameter 1 for ultra-low power mode
  * @retval  None
  */
 void Air530::setCycleTrackingMode(uint32_t runMillis, uint32_t sleepMillis)
 {
-    //TODO:Unknown error parameter
     sendCmd("$PGKC105,1,%u,%u", runMillis, sleepMillis);
 }
 
@@ -147,12 +146,11 @@ void Air530::setCycleTrackingMode(uint32_t runMillis, uint32_t sleepMillis)
  * @brief   setCycleLowPowerMode
  * @note    Cycle low power mode
  * @param   runMillis: Running time (ms)
- * @param   sleepMillis: Sleep time (ms)
+ * @param   sleepMillis: Sleep time (ms) - parameter 2 for low power mode
  * @retval  None
  */
 void Air530::setCycleLowPowerMode(uint32_t runMillis, uint32_t sleepMillis)
 {
-    //TODO:Unknown error parameter
     sendCmd("$PGKC105,2,%u,%u", runMillis, sleepMillis);
 }
 
