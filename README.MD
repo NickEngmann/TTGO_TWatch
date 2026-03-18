@@ -81,12 +81,55 @@
 - In the Arduino board select `TTGO T-Watch`
 - In the Arduino File -> Examples -> `TTGO_TWatch_Library`
 
- <h2 align = "left">🔶 Precautions</h2>
+<h2 align = "left">🔶 Precautions</h2>
 
 - T-Watch-2019 & LilyPi: Since uses a special IO as the SD interface, please remove the SD card when downloading the program.
 
 
- <h2 align = "left">🔷 Resources </h2>
+ <h2 align = "left">🔶 PlatformIO Native Testing</h2>
+
+This library includes comprehensive unit tests for native simulation using PlatformIO and the Unity testing framework. Tests cover the core modules that can run on any host system without hardware.
+
+**Run all native tests:**
+```bash
+pio test -e native -v
+```
+
+**Run LVGL rendering tests:**
+```bash
+pio test -e native_lvgl -v
+```
+
+**Available test suites:**
+
+| Test Suite | Component | Description | Tests |
+|------------|-----------|-------------|-------|
+| `test_statemachine` | StateMachine | Full state transition coverage including IDLE, RECORDING, STREAMING, ERROR, DEEP_SLEEP states | 20 tests |
+| `test_native` | StepCounter | BMA423 accelerometer step counting, daily goals, progress ring updates | 14 tests |
+| `test_ble_audio` | BLEAudioStream | GATT server mock, audio streaming states, battery level reporting | 48 tests |
+| `test_battery` | BatteryMonitor | Voltage monitoring, charging detection, low/critical alerts, power saving | 15 tests |
+| `test_lvgl_render` | LVGL_Simulator | Headless rendering with memory framebuffer, PPM image export | 7 tests |
+
+**Test Results:** All 104 unit tests pass on Linux build environment.
+
+### Modular Components
+
+The library is organized into independently testable modules:
+
+1. **StateMachine** - Handles device state transitions between IDLE, RECORDING, STREAMING, ERROR, and DEEP_SLEEP modes. Manages button presses, BLE connectivity, and timeout behaviors.
+
+2. **StepCounter** - Integrates with BMA423 accelerometer for step counting. Supports daily goals, progress tracking, and LVGL ring widget updates.
+
+3. **BLEAudioStream** - Implements BLE GATT server for audio streaming. Includes audio control commands, battery level reporting, and connection state management.
+
+4. **BatteryMonitor** - Monitors battery voltage, charging status, USB connection, and temperature. Supports configurable low/critical alerts and power saving modes.
+
+5. **LVGL_Simulator** - Headless LVGL rendering using memory framebuffer for testing UI components without hardware.
+
+See the [platformio.ini](platformio.ini) for build configuration details.
+
+
+ <h2 align = "left">🔶 Resources </h2>
 
 - [LilyPi Pin mapping and other instructions](docs/lilypi_pinmap.md)
 - [TWATCH 2019 Series pin mapping and other instructions](docs/watch_2019.md)
