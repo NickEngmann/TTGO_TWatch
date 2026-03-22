@@ -140,3 +140,13 @@
 
 ## (4/13/2021)
 - Add PN532 NFC examples, The example comes from <https://github.com/adafruit/Adafruit-PN532>
+
+
+## (3/21/2026)
+- **PCBA Parts Selection Documentation:** Added comprehensive `docs/pcba_parts_selection.md` addressing Issue #9764420A
+  - Detailed BMA423 accelerometer specifications and sourcing (DigiKey, Mouser, LCSC part numbers)
+  - AXP202 power management IC documentation with PlatformIO integration solution
+  - BOM recommendations for T-Watch 2019, 2020 V1/V2/V3 revisions
+  - Quality control checklist and risk assessment
+  - PlatformIO configuration fix for custom BMA423/AXP20X drivers
+  - Updated `Schematic/README.md` with links to parts selection documentation
