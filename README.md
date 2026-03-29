@@ -89,15 +89,22 @@ Screenshots are saved as PPM files in the `screenshots/` directory.
 
 ### Test Suites
 
-The project includes 104 tests across 5 test suites:
+The project includes **104 tests** across 5 test suites:
 
 | Suite | Directory | Tests | Description |
 |-------|-----------|-------|-------------|
-| Step Counter | `test/test_native/` | 14 | Init, step counting, daily goals, reset, config, LVGL ring |
-| State Machine | `test/test_statemachine/` | 20 | States (IDLE/RECORDING/STREAMING/ERROR/DEEP_SLEEP), button press, BLE connect/disconnect, timeouts, watchdog, callbacks |
-| BLE Audio | `test/test_ble_audio/` | 48 | UUID validation, state transitions, audio chunks, callbacks, battery level, GATT server lifecycle |
-| Battery Monitor | `test/test_battery/` | 15 | Voltage, percentage, alerts (edge-triggered), charging, power saving, config, USB detection |
-| LVGL Simulator | `test/test_lvgl_render/` | 7 | Headless init, label/button/bar/arc rendering, PPM export, multi-screen navigation |
+| **Step Counter** | `test/test_native/` | 14 | Init, step counting, daily goals, reset, config, LVGL ring widget |
+| **State Machine** | `test/test_statemachine/` | 20 | States (IDLE/RECORDING/STREAMING/ERROR/DEEP_SLEEP), button press, BLE connect/disconnect, timeouts, watchdog, callbacks |
+| **BLE Audio** | `test/test_ble_audio/` | 48 | UUID validation, state transitions, audio chunks, callbacks, battery level, GATT server lifecycle |
+| **Battery Monitor** | `test/test_battery/` | 15 | Voltage, percentage, alerts (edge-triggered), charging, power saving, config, USB detection |
+| **LVGL Simulator** | `test/test_lvgl_render/` | 7 | Headless init, label/button/bar/arc rendering, PPM export, multi-screen navigation |
+
+### Test Architecture
+
+- **NATIVE_BUILD**: Source files with `#include <Arduino.h>` are guarded with `#ifdef NATIVE_BUILD`
+- **Test Isolation**: Each test suite is in its own directory to avoid PlatformIO main() linking conflicts
+- **Mock Architecture**: Hardware mocks are used for ESP32-specific features in native tests
+- **No Arduino Stubs**: When including only isolated modules, no arduino_stubs.h is needed
 
 ### Running Tests
 
@@ -112,13 +119,6 @@ pio test -e native_lvgl -v
 pio test -e native -v -t test_step_counter
 ```
 
-### Test Architecture
-
-- **NATIVE_BUILD**: Source files with `#include <Arduino.h>` are guarded with `#ifdef NATIVE_BUILD`
-- **Test Isolation**: Each test suite is in its own directory to avoid PlatformIO main() linking conflicts
-- **Mock Architecture**: Hardware mocks are used for ESP32-specific features in native tests
-- **No Arduino Stubs**: When including only isolated modules, no arduino_stubs.h is needed
-
 ## PlatformIO Environments
 
 | Environment | Purpose | test_build_src | Notes |
@@ -126,6 +126,26 @@ pio test -e native -v -t test_step_counter
 | `native` | Unit tests (no LVGL) | false | Excludes LVGL rendering tests |
 | `native_lvgl` | LVGL headless rendering | true | Compiles `src/lvgl/`, requires PNG export |
 | `esp32` | Firmware build | N/A | Builds for actual ESP32 hardware |
+
+## Quick Reference
+
+### Version Information
+- **Library Version:** 1.4.2 (from `library.json`, `library.properties`)
+- **LVGL Version:** 7.x (from `platformio.ini` build flags)
+- **TFT_eSPI:** ^2.5.43 (from `library.json` lib_deps)
+
+### File Locations
+- **Source Files:** `src/*.cpp`, `src/*.h`
+- **Test Files:** `test/*/test_*.cpp`
+- **Documentation:** `docs/*.md`
+- **Configuration:** `platformio.ini`, `library.json`, `library.properties`
+
+### Key Headers
+- `TTGO.h` — Main TTGO class for display and hardware initialization
+- `StepCounter.h` — Step counting and daily goals
+- `BatteryMonitor.h` — Battery voltage, percentage, charging detection
+- `StateMachine.h` — Watch state management (IDLE, RECORDING, STREAMING, ERROR, DEEP_SLEEP)
+- `ble_audio_stream.h` — BLE audio streaming and GATT server
 
 ## Usage Examples
 
@@ -217,14 +237,31 @@ void setup() {
 }
 ```
 
-## Known Issues
+## Known Issues and Workarounds
 
-1. **LVGL 7.x Compatibility**: The repo's `src/lvgl/tests/` has broken `green` member access - excluded via `build_src_filter = -<lvgl/tests/>`
-2. **TFT_eSPI Dependencies**: PlatformIO `lib_deps` (TFT_eSPI) downloaded on first build - cache `~/.platformio` in CI
-3. **BLE Audio Stream**: Requires NimBLE (ESP32 only) - native tests use `#ifdef NATIVE_BUILD` stubs
-4. **BMA423 Driver**: ESP32 build requires BMA423.h from T-Watch BSP (not in PlatformIO registry) - CI warns, doesn't fail
-5. **Test Isolation**: Each test suite MUST be in its own directory to avoid multiple-definition errors
-6. **Native Build Isolation**: `test_build_src = true` compiles ALL source in `src/` - LVGL tests must use separate `native_lvgl` env
+### 1. LVGL 7.x Compatibility
+**Issue:** The repo's `src/lvgl/tests/` has broken `green` member access.  
+**Workaround:** Excluded via `build_src_filter = -<lvgl/tests/>` in `platformio.ini` (line 38).
+
+### 2. TFT_eSPI Dependencies
+**Issue:** PlatformIO `lib_deps` downloads TFT_eSPI on first build; CI may timeout.  
+**Workaround:** Cache `~/.platformio` directory in CI pipeline.
+
+### 3. BLE Audio Streaming
+**Issue:** Requires NimBLE (ESP32 only); not available in native builds.  
+**Workaround:** Native tests use `#ifdef NATIVE_BUILD` stubs for mock implementations.
+
+### 4. BMA423 Driver
+**Issue:** ESP32 build requires BMA423.h from T-Watch BSP (not in PlatformIO registry).  
+**Workaround:** CI warns but does not fail; ensure BMA423.h is available in project tree.
+
+### 5. Test Isolation
+**Issue:** Unity framework defines `main()` in each test file; linking conflicts occur.  
+**Workaround:** Each test suite MUST be in its own directory (see `test/` structure).
+
+### 6. Native Build Isolation
+**Issue:** `test_build_src = true` compiles ALL source in `src/`; conflicts with LVGL.  
+**Workaround:** LVGL tests use separate `native_lvgl` environment with filtered source.
 
 ## Contributing
 
@@ -233,7 +270,26 @@ void setup() {
 1. Create a new test directory under `test/` (e.g., `test/test_new_feature/`)
 2. Each test file must include its source directly: `#include "../src/NewFeature.cpp"`
 3. Use Unity test framework macros: `TEST_ASSERT_EQUAL()`, `RUN_TEST()`, etc.
-4. Add test to `platformio.ini` environment configuration
+4. Add test environment to `platformio.ini` configuration
+5. Ensure no conflicts with existing `main()` symbols
+
+### Testing the State Machine
+
+The State Machine supports 5 states: IDLE, RECORDING, STREAMING, ERROR, DEEP_SLEEP. See `test/test_statemachine/` for examples of:
+- State transitions via button press, BLE connect/disconnect
+- Configurable timeouts (idle, error recovery, watchdog)
+- State change callbacks
+- Edge-triggered recovery mechanisms
+
+### Testing BLE Audio Streaming
+
+The BLE Audio module implements a GATT server with:
+- Audio service UUID: `00001800-0000-1000-8000-00805f9b34fb`
+- Audio data UUID: `00002b04-0000-1000-8000-00805f9b34fb`
+- Audio control UUID: `00002b05-0000-1000-8000-00805f9b34fb`
+- Battery service UUID: `0000180f-0000-1000-8000-00805f9b34fb`
+
+See `test/test_ble_audio/` for state machine and GATT server tests.
 
 ### Building for ESP32
 
